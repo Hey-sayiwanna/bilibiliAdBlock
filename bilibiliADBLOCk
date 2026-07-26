@@ -1,9 +1,9 @@
 #!name=B站去广告（自托管版）
-#!desc=信息流 + 搜索 + 直播 + 开屏 + 播放器广告；保留底部会员购
+#!desc=信息流 + 搜索 + 直播 + 播放器 + 评论广告；保留底部会员购
 #!author=Hey-sayiwanna
 #!category=Surge去广告
 #!date=2026-07-26
-#!version=1.0.0
+#!version=1.1.0
 
 [Rule]
 DOMAIN,app.biliapi.net,REJECT
@@ -37,6 +37,12 @@ bilibili-live-tab-ad = type=http-response,pattern=^https:\/\/api\.live\.bilibili
 # ⭐ 新增：播放器下方商业卡补丁
 # =========================
 Bili.Player.AdPatch = type=http-response,pattern=^https?:\/\/(grpc|app)\.bili(bili\.com|api\.net)\/bilibili\.app\.(view|viewunite)\.v1\.View\/(View|RelatesFeed)$,requires-body=1,binary-body-mode=1,engine=webview,max-size=262144,script-path=https://raw.githubusercontent.com/Hey-sayiwanna/bilibiliAdBlock/main/vendor/BiliUniverse.ADBlock.v0.6.24.response.bundle.js
+
+# 流量告警、办卡免流等播放器推广提示
+Bili.Player.TFInfo.AdPatch = type=http-response,pattern=^https?:\/\/(grpc|app)\.bili(bili\.com|api\.net)\/bilibili\.app\.view\.v1\.View\/TFInfo$,requires-body=1,binary-body-mode=1,engine=webview,script-path=https://raw.githubusercontent.com/Hey-sayiwanna/bilibiliAdBlock/main/vendor/BiliUniverse.ADBlock.v0.6.24.response.bundle.js
+
+# 评论区广告与置顶带货推广
+Bili.Reply.AdPatch = type=http-response,pattern=^https?:\/\/(grpc|app)\.bili(bili\.com|api\.net)\/bilibili\.main\.community\.reply\.v1\.Reply\/MainList$,requires-body=1,binary-body-mode=1,engine=webview,script-path=https://raw.githubusercontent.com/Hey-sayiwanna/bilibiliAdBlock/main/vendor/BiliUniverse.ADBlock.v0.6.24.response.bundle.js,argument=Reply.AD=true&LogLevel=WARN
 
 [MITM]
 hostname = %APPEND% app.bilibili.com,api.live.bilibili.com,app.biliapi.net,grpc.biliapi.net
