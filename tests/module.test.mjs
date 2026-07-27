@@ -38,6 +38,27 @@ test("traffic warning and comment ads use the self-hosted protobuf cleaner", () 
   assert.match(vendorText, /MainList/);
 });
 
+test("search result ads use the self-hosted protobuf cleaner", () => {
+  assert.match(
+    moduleText,
+    /bilibili\\\.polymer\\\.app\\\.search\\\.v1\\\.Search\\\/SearchAll/,
+  );
+
+  const searchRule = moduleText
+    .split("\n")
+    .find((line) => line.includes("bilibili-search-result-ad"));
+  assert.ok(searchRule);
+  assert.match(searchRule, /binary-body-mode=1/);
+  assert.match(searchRule, /argument=Search\.AD=true&LogLevel=WARN/);
+  assert.match(
+    searchRule,
+    /script-path=https:\/\/raw\.githubusercontent\.com\/Hey-sayiwanna\/bilibiliAdBlock\/main\/vendor\/BiliUniverse\.ADBlock\.v0\.6\.24\.response\.bundle\.js/,
+  );
+
+  assert.match(vendorText, /oneofKind!==["']cm["']/);
+  assert.match(vendorText, /oneofKind!==["']game["']/);
+});
+
 test("the focused patch does not add another splash handler", () => {
   assert.equal((moduleText.match(/splash\\\//g) ?? []).length, 1);
 });
