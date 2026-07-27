@@ -10,8 +10,8 @@ https://raw.githubusercontent.com/Hey-sayiwanna/bilibiliAdBlock/main/bilibiliADB
 
 - 首页信息流、搜索推荐、右上角活动入口去广告
 - 直播信息流、直播间和直播 Tab 广告清理
-- 播放器商业卡、“流量告急”和办卡免流提示清理
-- 评论区广告与部分置顶带货推广清理
+- 视频简介区商业卡、关联推广和活动横幅清理
+- “流量告急”和办卡免流提示清理
 - 保留底部完整导航，不删除或移动“会员购”
 
 ## 安装

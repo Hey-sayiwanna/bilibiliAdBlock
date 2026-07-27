@@ -22,20 +22,32 @@ test("old third-party runtime hosts are absent", () => {
   assert.doesNotMatch(moduleText, /klraw\.pages\.dev|github\.com\/BiliUniverse\/ADBlock\/releases/);
 });
 
-test("traffic warning and comment ads use the self-hosted protobuf cleaner", () => {
+test("intro ads and traffic warning each use one self-hosted protobuf rule", () => {
+  const introRules = moduleText
+    .split("\n")
+    .filter((line) => line.startsWith("Bili.Player.AdPatch ="));
+  const trafficRules = moduleText
+    .split("\n")
+    .filter((line) => line.startsWith("Bili.Player.TFInfo.AdPatch ="));
+
+  assert.equal(introRules.length, 1);
+  assert.equal(trafficRules.length, 1);
   assert.match(moduleText, /bilibili\\\.app\\\.view\\\.v1\\\.View\\\/TFInfo/);
-  assert.match(moduleText, /bilibili\\\.main\\\.community\\\.reply\\\.v1\\\.Reply\\\/MainList/);
 
   const vendorPath =
     "https://raw.githubusercontent.com/Hey-sayiwanna/bilibiliAdBlock/main/vendor/BiliUniverse.ADBlock.v0.6.24.response.bundle.js";
-  const relevantRules = moduleText
-    .split("\n")
-    .filter((line) => line.includes("TFInfo") || line.includes("Reply\\/MainList"));
-
-  assert.equal(relevantRules.length, 2);
+  const relevantRules = [...introRules, ...trafficRules];
   assert.ok(relevantRules.every((line) => line.includes(`script-path=${vendorPath}`)));
   assert.match(vendorText, /tfToast/);
-  assert.match(vendorText, /MainList/);
+  assert.match(vendorText, /tfPanelCustomized/);
+  assert.match(vendorText, /cmConfig/);
+  assert.match(vendorText, /cmIpad/);
+  assert.match(vendorText, /relateCardType/);
+  assert.match(vendorText, /uniqueId/);
+});
+
+test("comment requests are not intercepted", () => {
+  assert.doesNotMatch(moduleText, /Reply\\\/MainList|Bili\.Reply\.AdPatch/);
 });
 
 test("search result ads use the self-hosted protobuf cleaner", () => {
